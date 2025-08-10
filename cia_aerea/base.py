@@ -96,6 +96,21 @@ class CiaAerea:
         setattr(self,"table",df)
 
 
+    def insert_message_on_tickets_canceled_after_the_billing_period(self):
+        df = getattr(self, "table") 
+        #tbl=self.tickets_issued.copy()
+        filter_billing_period=df[(~df['Data de Cancelamento'].isnull()
+                                )&(df['Data de Cancelamento']>=self.metadata.end_billing_period)
+                                ]
+        new_text="Cancelado no mês seguinte ao de referência. Será reembolsado no próximo faturamento."
+        
+        df.loc[filter_billing_period.index, "Análise da Fiscalização"] = (df.loc[filter_billing_period.index, "Análise da Fiscalização"]
+                                                                            .apply(lambda x: new_text if pd.isna(x) else f"{x}\n{new_text}"
+                                                                                    )
+                                                                            )
+        setattr(self,"table",df)
+
+
     def change_worksheet(self):
         wb = load_workbook(self.address)
         ws = wb[self.get_sheet_name()]

@@ -3,6 +3,7 @@
 
 from cia_aerea.emitidos import CiaAreaIssued
 from cia_aerea.emitidos_cancelados import CiaAreaIssuedCancelled
+from cia_aerea.bilhetes_outros_periodos import CiaAreaCancelsOtherPeriods
 #from cia_aerea.base import CiaAerea
 from planilhas.manipulados import planilha
 
@@ -28,6 +29,11 @@ if __name__ == "__main__":
         issued_cancelled = CiaAreaIssuedCancelled(address)
         # Chama .flow() para tratar a planilha de bilhetes emitidos
         issued_cancelled.flow()
+
+        # Cria uma instância de CiaAreaCancelsOtherPeriods usando o endereço da planilha copiada  
+        #issued_cancels_other_periods = CiaAreaCancelsOtherPeriods(address)
+        # Chama .flow() para tratar a planilha de bilhetes cancelados em outroas periodos
+        #issued_cancels_other_periods.flow()
 
         cont=input("Deseja continuar? (0 - Não, 1 - Sim): ")
         if cont=="0":
