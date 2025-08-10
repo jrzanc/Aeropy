@@ -1,0 +1,3 @@
+1 - Relatório Gerencial.
+
+1a) Tabela de bilhetes com não observância dos prazos de reserva. Com isso o fiscal pode buscar o localizador original para enviar para a empresa para que ela possa fazer algum tipo de cotestação.
