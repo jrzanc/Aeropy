@@ -5,7 +5,7 @@ from cia_aerea.emitidos import CiaAreaIssued
 from cia_aerea.emitidos_cancelados import CiaAreaIssuedCancelled
 from cia_aerea.bilhetes_outros_periodos import CiaAreaCancelsOtherPeriods
 #from cia_aerea.base import CiaAerea
-from planilhas.manipulados import planilha
+from planilhas.manipulados import Planilha
 
 #from planilhas.metadata import SpreadsheetMetadata
 
@@ -16,7 +16,7 @@ from planilhas.manipulados import planilha
 if __name__ == "__main__": 
     while True:
         # Instancia a classe Planilha e atribui à variável worksheet_excel
-        worksheet_excel = planilha()
+        worksheet_excel = Planilha()
         # Chama .flow() para obter o endereço da planilha copiada com novo nome
         address = worksheet_excel.flow()    
 
@@ -31,9 +31,9 @@ if __name__ == "__main__":
         issued_cancelled.flow()
 
         # Cria uma instância de CiaAreaCancelsOtherPeriods usando o endereço da planilha copiada  
-        #issued_cancels_other_periods = CiaAreaCancelsOtherPeriods(address)
+        issued_cancels_other_periods = CiaAreaCancelsOtherPeriods(address)
         # Chama .flow() para tratar a planilha de bilhetes cancelados em outroas periodos
-        #issued_cancels_other_periods.flow()
+        issued_cancels_other_periods.flow()
 
         cont=input("Deseja continuar? (0 - Não, 1 - Sim): ")
         if cont=="0":

@@ -2,15 +2,15 @@
 import tkinter as tk
 from tkinter import filedialog
 
-class planilha:
-    def get_address(self):
+class Planilha:
+    def get_address(self,title):
         # Cria uma janela oculta
         root = tk.Tk()
         root.withdraw()
         # Abre a janela para selecionar o arquivo
         try:
             caminho_arquivo = filedialog.askopenfilename(
-                title="Selecione um arquivo",
+                title=title,
                 filetypes=[("Arquivos Excel", "*.xls"),("Arquivos Excel", "*.xlsx"), ("Todos os arquivos", "*.*")]
             )
             return caminho_arquivo
@@ -37,8 +37,11 @@ class planilha:
 
 
    
-    def flow(self):
-        g_address=self.get_address()
-        n_address=self.get_new_address(g_address)
-        self.copy_spreadsheet(g_address,n_address)
-        return n_address
+    def flow(self,title,copy=True):
+        g_address=self.get_address(title)        
+        if copy:
+            n_address=self.get_new_address(g_address)
+            self.copy_spreadsheet(g_address,n_address)
+            return n_address
+        else:
+            return g_address 
