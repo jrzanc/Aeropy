@@ -1,5 +1,5 @@
 import pandas as pd
-from cia_aerea.base import CiaAerea
+from tcrp.cia_aerea.base import CiaAerea
 
 
 class CiaAreaCancelsOtherPeriods(CiaAerea):

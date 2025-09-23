@@ -1,9 +1,9 @@
 # Importing Labraries
-from cia_aerea.emitidos import CiaAreaIssued
-from cia_aerea.emitidos_cancelados import CiaAreaIssuedCancelled
-from cia_aerea.bilhetes_outros_periodos import CiaAreaCancelsOtherPeriods
+from tcrp.cia_aerea.emitidos import CiaAreaIssued
+from tcrp.cia_aerea.emitidos_cancelados import CiaAreaIssuedCancelled
+from tcrp.cia_aerea.bilhetes_outros_periodos import CiaAreaCancelsOtherPeriods
 #from cia_aerea.base import CiaAerea
-from planilhas.manipulados import Planilha
+from tcrp.planilhas.manipulados import Planilha
 
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton, QVBoxLayout,

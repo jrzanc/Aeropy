@@ -1,7 +1,7 @@
 
 import pandas as pd
 from openpyxl import load_workbook
-from cia_aerea.base import CiaAerea
+from tcrp.cia_aerea.base import CiaAerea
 
 
 # Classe Cia Aérea Emitidos

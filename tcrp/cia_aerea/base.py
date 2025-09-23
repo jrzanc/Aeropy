@@ -6,7 +6,7 @@ import re
 
 # Importar a classe SpreadsheetMetadata, assumindo que ela está em outro arquivo
 
-from planilhas.metadata import SpreadsheetMetadata
+from tcrp.planilhas.metadata import SpreadsheetMetadata
 
 
 class CiaAerea:
