@@ -1,0 +1,105 @@
+import pandas as pd
+from tcrp.cia_aerea.base import CiaAerea
+
+
+class CiaAreaCancelsOtherPeriods(CiaAerea):
+    def __init__(self,address_planilha_medicao_provisoria,address_bilhetes_voados):
+        super().__init__(address_planilha_medicao_provisoria)
+        self.address_tickets_flown=address_bilhetes_voados
+        self.table=self.get_table()  
+        self.table_tickets_flown=self.get_table_tickets_flown()
+
+    def get_sheet_name(self):
+        return "Bilhetes de Outros Períodos"
+
+    def data_structure(self):
+        keys_cols={"string":["Localizador",
+                                "Bilhete", "Órgão Solicitante",
+                                "Órgão Superior",
+                                "PCDP" ,
+                                "Evento(s) de Faturamento",
+                                "Situação do Bilhete",
+                                "Situações de Embarque",
+                                "Status do Faturamento",
+                                "Tipo(s) de Pendência",
+                                "Análise da Fiscalização",
+                                "Análise da Companhia Aérea",
+                                ],
+                    "datetime64[ns]":["Data de emissão",
+                                    "Data de Cancelamento"],
+                    "float64":['Crédito de Reembolso',
+                                'Desconto %',
+                                'Desconto Efetivo %',
+                                'Desconto Efetivo R$',
+                                'Desconto R$',
+                                'Glosa',
+                                'Multa Calculada',
+                                'Multa Efetiva',
+                                'Multa de Reembolso Retornada',
+                                'Reembolso Calculado',
+                                'Reembolso Efetivo',
+                                'Reembolso Retornado',
+                                'Tarifa Comercial Retornada',
+                                'Tarifa Embarque Efetiva',
+                                'Tarifa Praticada Calculada',
+                                'Tarifa Praticada Efetiva',
+                                'Tarifa Praticada Retornada',
+                                'Tarifa de Embarque Retornada',
+                                'Total',
+                                'Valor a Faturar']
+                    }
+        for key in keys_cols.keys():
+            self._loc_teste("table",keys_cols[key],key)
+        
+
+    def get_table_tickets_flown(self):
+        cia_lower=self.metadata.cia.lower()
+        cias=["Azul","Gol","Latam"] 
+        match = next((nome for nome in cias if nome.lower() in cia_lower), None)
+        df=pd.read_excel(self.address_tickets_flown,sheet_name=match)
+        return df
+
+    def insert_tickets_already_analyzed(self):
+        df = getattr(self, "table") 
+        filter_tickets_already_analyzed=df[(((df["Data de Cancelamento"]<self.metadata.start_billing_period)
+                                            |(df["Data de Cancelamento"].isna()))&
+                                           (df["Status do Faturamento"]!="Não Faturável"))]
+        new_text="Voado - Já Analisado em Mês Anterior"
+        df.loc[filter_tickets_already_analyzed.index,"Análise da Fiscalização"]=new_text
+
+
+    def void_tickets(self):
+        df = getattr(self, "table") 
+        filter_void_tickets=df[(((df["Data de Cancelamento"]<self.metadata.start_billing_period)
+                                            |(df["Data de Cancelamento"].isna()))&
+                                           (df["Status do Faturamento"]=="Não Faturável"))]
+        new_text="VOID - Já Analisado em Mês Anterior"
+        df.loc[filter_void_tickets.index,"Análise da Fiscalização"]=new_text        
+        setattr(self,"table",df)
+
+
+    def check_non_refunded_tickets(self):
+        df = getattr(self, "table") 
+        filter_check_non_refunded_tickets=df[((df["Data de Cancelamento"]<self.metadata.start_billing_period)&
+                                              (abs(df['Reembolso Efetivo'])<0.01)&
+                                              (df['Status do Faturamento']!="Não Faturável")&
+                                              (df["Análise da Fiscalização"].isna()))]
+        new_text="Validar o valor do reembolso indicado na coluna 'Reembolso Efetivo'"
+        df.loc[filter_check_non_refunded_tickets.index,"Análise da Fiscalização"]=new_text  
+        setattr(self,"table",df)
+        
+    def general_message(self):
+        df = getattr(self, "table") 
+        new_text="Validar o valor do reembolso indicado na coluna 'Reembolso Efetivo'"
+        df.loc[df["Análise da Fiscalização"].isna(),"Análise da Fiscalização"]=new_text
+        setattr(self,"table",df)
+        
+
+    def flow(self):
+        self.data_structure()
+        self.insert_message_on_tickets_canceled_after_the_billing_period()
+        self.insert_tickets_already_analyzed()
+        self.void_tickets()
+        self.check_non_refunded_tickets()
+        self.general_message()
+        self.change_worksheet()

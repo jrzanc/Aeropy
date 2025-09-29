@@ -3,7 +3,7 @@ from tcrp.cia_aerea.emitidos import CiaAreaIssued
 from tcrp.cia_aerea.emitidos_cancelados import CiaAreaIssuedCancelled
 from tcrp.cia_aerea.bilhetes_outros_periodos import CiaAreaCancelsOtherPeriods
 #from cia_aerea.base import CiaAerea
-from tcrp.planilhas.manipulados import Planilha
+from planilhas.manipulados import Planilha
 
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton, QVBoxLayout,
@@ -23,7 +23,7 @@ class TelaInicial(QWidget):
 
         # Logo JPG à esquerda
         logo = QLabel()
-        caminho_logo = "C:/Users/JuniorZancanaro/OneDrive - UFMT/TEAMNS/MGI/MGI - Aeropy_2.0 - Aeropy Project/Aeropy_2.0/Aeropy/gui/logo.jpg"
+        caminho_logo = "logo.jpg"
         pixmap = QPixmap(caminho_logo)
         pixmap = pixmap.scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         logo.setPixmap(pixmap)
